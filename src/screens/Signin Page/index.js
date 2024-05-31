@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { Alert, Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useAuth } from '@realm/react';
+import { useAuth, useEmailPasswordAuth } from '@realm/react';
 import styles from './style';
 export default function Login({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,15 +11,14 @@ export default function Login({ navigation }) {
     { email: '', password: '' }
   );
   const { logInWithEmailPassword, result } = useAuth();
-  const {register} = logInWithEmailPassword()
-
   const handleLogin = async () => {
+    console.log('hello')
     const { email, password } = loginData;
     if (!email || !password) {
       Alert.alert('Please fill the form completely');
     } else {
       try {
-        await logInWithEmailPassword(email, password);
+        await logInWithEmailPassword({email, password});
       } catch (error) {
         console.error('Login failed:', error.message);
         setError('Invalid email or password');
@@ -29,20 +29,22 @@ export default function Login({ navigation }) {
   const setShowPasswordfn = () => {
     setShowPassword(!showPassword);
   };
+    const {register} = useEmailPasswordAuth()
 
   const registerUser = async () => {
     console.log(loginData)
     const { email, password } = loginData;
     if(email && password){
       try {
-        await register(email, password);
-        await logInWithEmailPassword(email, password);
+        await register({email, password});
+      
+        await logInWithEmailPassword({email, password});
+        
       } catch (error) {
         console.error('Registration failed:', error.message);
         setError('Registration failed. Please try again.');
       }
     }
-
   };
 
   return (
@@ -68,7 +70,6 @@ export default function Login({ navigation }) {
             value={loginData.email}
           />
         </View>
-
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}> Password </Text>
           <View style={styles.passwordContainer}>
@@ -87,7 +88,7 @@ export default function Login({ navigation }) {
         </View>
 
         <View style={styles.loginBox}>
-          <TouchableOpacity onPress={()=>handleLogin()}>
+          <TouchableOpacity onPress={handleLogin}>
             <Text style={{ color: 'white' }}>Login</Text>
           </TouchableOpacity>
         </View>
@@ -97,7 +98,7 @@ export default function Login({ navigation }) {
             <Text style={styles.signuptext}>Create Account</Text>
           </View>
           <View style={styles.signupButton}>
-            <TouchableOpacity onPress={()=>registerUser()}>
+            <TouchableOpacity onPress={registerUser}>
               <Text style={{ color: 'blue' }}>Sign up</Text>
             </TouchableOpacity>
           </View>
