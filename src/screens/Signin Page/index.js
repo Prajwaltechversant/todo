@@ -6,7 +6,9 @@ import styles from './style';
 export default function Login({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [loginData, setLoginData] = useState(
+    { email: '', password: '' }
+  );
   const { logInWithEmailPassword, result } = useAuth();
   const {register} = logInWithEmailPassword()
 
@@ -31,14 +33,16 @@ export default function Login({ navigation }) {
   const registerUser = async () => {
     console.log(loginData)
     const { email, password } = loginData;
-    if(email && password)
-    try {
-      await register(email, password);
-      await logInWithEmailPassword(email, password);
-    } catch (error) {
-      console.error('Registration failed:', error.message);
-      setError('Registration failed. Please try again.');
+    if(email && password){
+      try {
+        await register(email, password);
+        await logInWithEmailPassword(email, password);
+      } catch (error) {
+        console.error('Registration failed:', error.message);
+        setError('Registration failed. Please try again.');
+      }
     }
+
   };
 
   return (
@@ -83,7 +87,7 @@ export default function Login({ navigation }) {
         </View>
 
         <View style={styles.loginBox}>
-          <TouchableOpacity onPress={handleLogin}>
+          <TouchableOpacity onPress={()=>handleLogin()}>
             <Text style={{ color: 'white' }}>Login</Text>
           </TouchableOpacity>
         </View>
@@ -93,7 +97,7 @@ export default function Login({ navigation }) {
             <Text style={styles.signuptext}>Create Account</Text>
           </View>
           <View style={styles.signupButton}>
-            <TouchableOpacity onPress={registerUser}>
+            <TouchableOpacity onPress={()=>registerUser()}>
               <Text style={{ color: 'blue' }}>Sign up</Text>
             </TouchableOpacity>
           </View>
