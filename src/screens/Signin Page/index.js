@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Alert, Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -25,28 +24,27 @@ export default function Login({ navigation }) {
       }
     }
   };
-
   const setShowPasswordfn = () => {
     setShowPassword(!showPassword);
   };
     const {register} = useEmailPasswordAuth()
-
   const registerUser = async () => {
     console.log(loginData)
     const { email, password } = loginData;
     if(email && password){
       try {
         await register({email, password});
-      
+        console.log(result.error)
+      if(result.success){
         await logInWithEmailPassword({email, password});
-        
+
+      }
       } catch (error) {
         console.error('Registration failed:', error.message);
         setError('Registration failed. Please try again.');
       }
     }
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
