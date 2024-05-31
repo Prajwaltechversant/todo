@@ -5,7 +5,7 @@ import styles from './style';
 import Plus from 'react-native-vector-icons/Entypo';
 import Item from './Item';
 import {useObject, useQuery, useRealm, useUser} from '@realm/react';
-import {Task} from '../../REALM/Schema/taskSchema';
+// import {Task} from '../../REALM/Schema/taskSchema';
 import {BSON} from 'realm';
 
 export default function Order({navigation}) {
@@ -38,7 +38,7 @@ console.log(task)
             description: description,
             is_Mark_As_Done: false,
             _id: newObjectId,
-            user_id :user.id
+            user_id :user?.id
           });
         });
         setData({
@@ -53,10 +53,10 @@ console.log(task)
 
   const updateTask = async () => {
     const {title, description, _id} = data;
-    const itemToBeUpdated = realm.objectForPrimaryKey('Tasks', _id);
+    const itemToBeUpdated =await realm.objectForPrimaryKey('Tasks', _id);
     try {
       if (itemToBeUpdated) {
-        realm.write(() => {
+       await realm.write(() => {
           itemToBeUpdated.title = title;
           itemToBeUpdated.description = description;
         });

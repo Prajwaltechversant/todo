@@ -6,12 +6,11 @@ import Login from './src/screens/Signin Page';
 import { Tasks } from './src/REALM/Model/Task';
 import Guest from './src/screens/LoginAsGuest';
 
-
-const appId = 'application-0-jcccrxo'
+const appId = 'task-bkdjjmt'
 export default function App() {
   return (
-      <AppProvider id='application-0-jcccrxo'>
-        <UserProvider fallback={Guest}>
+      <AppProvider id='task-bkdjjmt'>
+        <UserProvider fallback={Login}>
           <RealmProvider schema={[Tasks]}
           sync={{
             flexible: true,
@@ -19,7 +18,8 @@ export default function App() {
               update(subs, realm) {
                 subs.add(realm.objects('Tasks'));
               },
-              rerunOnOpen:true
+              rerunOnOpen:true,
+
             },
           }}
           >

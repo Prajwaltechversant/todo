@@ -1,38 +1,26 @@
-import {
-  Alert,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  Touchable,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
-import styles from './style';
+import React, { useState } from 'react';
+import { Alert, Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
-export default function Login({navigation, route}) {
-    console.log(route)
+import { useAuth } from '@realm/react';
+import styles from './style';
+export default function Login({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-
-  const [userData, setUserData] = useState();
-  const [isCheckedRememberMe, setIsCheckedRememberMe] = useState(false);
-
-  const [loginData, setLoginData] = useState({
-    username: '',
-    password: '',
-  });
+  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const { logInWithEmailPassword, result } = useAuth();
+  const {register} = logInWithEmailPassword()
 
   const handleLogin = async () => {
-    const {username, password} = loginData;
-    if (!username || !password) {
+    const { email, password } = loginData;
+    if (!email || !password) {
       Alert.alert('Please fill the form completely');
     } else {
-      console.log('hello');
-      navigation.replace('Home')
+      try {
+        await logInWithEmailPassword(email, password);
+      } catch (error) {
+        console.error('Login failed:', error.message);
+        setError('Invalid email or password');
+      }
     }
   };
 
@@ -40,6 +28,18 @@ export default function Login({navigation, route}) {
     setShowPassword(!showPassword);
   };
 
+  const registerUser = async () => {
+    console.log(loginData)
+    const { email, password } = loginData;
+    if(email && password)
+    try {
+      await register(email, password);
+      await logInWithEmailPassword(email, password);
+    } catch (error) {
+      console.error('Registration failed:', error.message);
+      setError('Registration failed. Please try again.');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -53,16 +53,15 @@ export default function Login({navigation, route}) {
           height={100}
         />
       </View>
-      {/* Login Form */}
 
       <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}> Username </Text>
+          <Text style={styles.inputLabel}> email </Text>
           <TextInput
             placeholder="Enter your username"
-            onChangeText={e => setLoginData({...loginData, username: e})}
+            onChangeText={(e) => setLoginData({ ...loginData, email: e })}
             style={styles.inputBox}
-            value={loginData.username}
+            value={loginData.email}
           />
         </View>
 
@@ -73,27 +72,29 @@ export default function Login({navigation, route}) {
               placeholder="Enter your Password"
               secureTextEntry={!showPassword}
               style={styles.inputBox}
-              onChangeText={e => setLoginData({...loginData, password: e})}
+              onChangeText={(e) => setLoginData({ ...loginData, password: e })}
               value={loginData.password}
             />
             <TouchableOpacity onPress={setShowPasswordfn}>
               <AntDesign name="eye" style={styles.icon} color="green" />
             </TouchableOpacity>
           </View>
-          {error && <Text style={{color: 'red'}}> {error} </Text>}
+          {error && <Text style={{ color: 'red' }}>{error}</Text>}
         </View>
+
         <View style={styles.loginBox}>
           <TouchableOpacity onPress={handleLogin}>
-            <Text style={{color: 'white'}}>login</Text>
+            <Text style={{ color: 'white' }}>Login</Text>
           </TouchableOpacity>
         </View>
+
         <View style={styles.signupBox}>
           <View>
             <Text style={styles.signuptext}>Create Account</Text>
           </View>
           <View style={styles.signupButton}>
-            <TouchableOpacity >
-              <Text style={{color: 'blue'}}>Sign up</Text>
+            <TouchableOpacity onPress={registerUser}>
+              <Text style={{ color: 'blue' }}>Sign up</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -101,3 +102,4 @@ export default function Login({navigation, route}) {
     </View>
   );
 }
+

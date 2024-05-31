@@ -6,7 +6,6 @@ import { useAuth } from '@realm/react'
 
 export default function Guest() {
     const {logInWithAnonymous} = useAuth();
-
     const guestLogin =()=>{
         logInWithAnonymous()
     }
