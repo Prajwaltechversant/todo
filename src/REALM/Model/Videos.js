@@ -17,7 +17,7 @@ export class Videos extends Realm.Object {
       video_url:{type:'string'},
       videoDetails:{type:'mixed'}
     },
-  };
+  }; 
  
 }
 

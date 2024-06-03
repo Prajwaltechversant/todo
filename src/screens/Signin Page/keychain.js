@@ -6,12 +6,11 @@ export const setKeyChain = async (loginData) => {
     const date = new Date()
     // console.log(date.getTime())
     const currT = date.getTime();
-    loginData.id=currT;
     const { username, password } = loginData;
 
     try {
         const jsonData = JSON.stringify(loginData);
-        await AsyncStorage.setItem(`${currT}`, jsonData)
+    
 
     }
     catch (err) {

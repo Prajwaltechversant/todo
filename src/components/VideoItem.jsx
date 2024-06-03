@@ -6,6 +6,8 @@ import {useNavigation} from '@react-navigation/native';
 import coloPalette from '../assets/Theme/coloPalette';
 
 export default function VideoItem({item, type}) {
+
+
   const user = useUser();
   const realm = useRealm();
 

@@ -7,13 +7,19 @@ import {useAuth, useQuery, useUser} from '@realm/react';
 import coloPalette from '../assets/Theme/coloPalette';
 
 export default function Videos() {
+
   const [allVideos, setAllVideos] = useState([]);
+  
   const [pageNo, setPageNo] = useState(20) 
+
   const api_key = '7w5m55V3kEjfM539FbdiooTn5omqFe5TTI99Wauwysgz29Tmfr5Qors9';
+
   const url = `https://api.pexels.com/videos/popular?per_page=${pageNo}`;
 
   const videos = useQuery('Videos');
+
 //   console.log(videos);
+
   const getData = async () => {
     const response = await axios.get(url, {
       headers: {
